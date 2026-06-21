@@ -1,0 +1,13 @@
+Catalog Service fue instalado.
+
+Namespace: {{ .Release.Namespace }}
+Release: {{ .Release.Name }}
+
+Para probar localmente:
+
+  kubectl port-forward svc/{{ include "catalog-service.fullname" . }} 3000:{{ .Values.service.port }} -n {{ .Release.Namespace }}
+  curl http://localhost:3000/api/health
+
+Para revisar pods:
+
+  kubectl get pods -n {{ .Release.Namespace }}

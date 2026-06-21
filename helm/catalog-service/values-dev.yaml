@@ -1,0 +1,32 @@
+replicaCount: 1
+
+image:
+  repository: catalog-service-k8s
+  tag: "local"
+  pullPolicy: Never
+
+config:
+  NODE_ENV: development
+  API_PREFIX: api
+  APP_VERSION: "1.0.0-dev"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: catalog.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+autoscaling:
+  enabled: false

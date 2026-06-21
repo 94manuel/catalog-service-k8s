@@ -1,0 +1,85 @@
+name: CI/CD Catalog Service
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: catalog-service-k8s
+
+jobs:
+  build-test-publish:
+    name: Build, test, Docker publish and Helm update
+    runs-on: ubuntu-latest
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: TypeScript validation
+        run: npm run lint
+
+      - name: Build application
+        run: npm run build
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest \
+            .
+
+      - name: Login to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push Docker image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Update Helm production values with image SHA
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          sed -i "s|repository: .*catalog-service-k8s|repository: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}|g" helm/catalog-service/values-prod.yaml
+          sed -i "s|tag: .*|tag: \"${{ github.sha }}\"|g" helm/catalog-service/values-prod.yaml
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add helm/catalog-service/values-prod.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update image tag ${{ github.sha }} [skip ci]"
+            git push
+          fi
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Helm lint
+        run: helm lint helm/catalog-service
+
+      - name: Helm template validation
+        run: helm template catalog-service helm/catalog-service -f helm/catalog-service/values-prod.yaml
