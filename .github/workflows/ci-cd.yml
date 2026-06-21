@@ -1,12 +1,16 @@
 name: CI/CD Catalog Service
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
-      - main
+      - master
+      - feature/entrega
+
   pull_request:
     branches:
-      - main
+      - master
 
 permissions:
   contents: write
@@ -53,17 +57,17 @@ jobs:
             .
 
       - name: Login to GHCR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
 
       - name: Push Docker image
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Update Helm production values with image SHA
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           sed -i "s|repository: .*catalog-service-k8s|repository: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}|g" helm/catalog-service/values-prod.yaml
           sed -i "s|tag: .*|tag: \"${{ github.sha }}\"|g" helm/catalog-service/values-prod.yaml
