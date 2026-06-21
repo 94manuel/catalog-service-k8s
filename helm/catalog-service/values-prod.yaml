@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: ghcr.io/94manuel/catalog-service-k8s
-  tag: "latest"
+  tag: "e730f09ea456429d8d13b205907453572ab8b038"
   pullPolicy: IfNotPresent
 
 config:
