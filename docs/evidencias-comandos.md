@@ -1,4 +1,4 @@
-# Evidencias y comandos para grabar el video
+# Evidencias y comandos
 
 Use este archivo como lista de chequeo durante la grabación del video.
 
@@ -90,9 +90,7 @@ Desplegar:
 
 ```bash
 kubectl create namespace catalog-service --dry-run=client -o yaml | kubectl apply -f -
-helm upgrade --install catalog-service helm/catalog-service \
-  -n catalog-service \
-  -f helm/catalog-service/values-dev.yaml
+helm upgrade --install catalog-service helm/catalog-service -n catalog-service -f helm/catalog-service/values-dev.yaml
 ```
 
 Consultar recursos:
