@@ -14,4 +14,5 @@ async function bootstrap(): Promise<void> {
   console.log(`[catalog-service] running on port ${port} with prefix /${apiPrefix}`);
 }
 
-void bootstrap();//Entrega k8s
+void bootstrap();
+//Entrega k8s

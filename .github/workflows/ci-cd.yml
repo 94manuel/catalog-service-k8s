@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - master
-      - feature/entregak8s
+      - feature/entregafinalk8s
 
   pull_request:
     branches:
