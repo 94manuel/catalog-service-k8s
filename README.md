@@ -204,5 +204,3 @@ kubectl get pods -n catalog-service
 kubectl get svc -n catalog-service
 kubectl get applications -n argocd
 ```
-
-El guion completo está en `docs/guion-video.md`.
