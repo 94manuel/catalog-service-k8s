@@ -4,7 +4,7 @@ Este repositorio contiene el entregable completo para la actividad **Trabajo K8S
 
 ## 1. Objetivo del entregable
 
-Implementar un microservicio básico, individualmente desplegable, que pueda ejecutarse localmente con Docker, desplegarse en Kubernetes mediante Helm, sincronizarse con ArgoCD y actualizarse automáticamente desde un pipeline cuando se detecta un commit sobre la rama `main`.
+Implementar un microservicio básico, individualmente desplegable, que pueda ejecutarse localmente con Docker, desplegarse en Kubernetes mediante Helm, sincronizarse con ArgoCD y actualizarse automáticamente desde un pipeline cuando se detecta un commit sobre la rama `master`.
 
 ## 2. Arquitectura propuesta
 
