@@ -1,9 +1,11 @@
-replicaCount: 1
+replicaCount: 2
 
 image:
-  repository: catalog-service-k8s
-  tag: "local"
-  pullPolicy: Never
+  repository: ghcr.io/94manuel/catalog-service-k8s
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
 
 config:
   NODE_ENV: development

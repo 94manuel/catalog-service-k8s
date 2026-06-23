@@ -427,7 +427,7 @@ Debe tener:
 
 ```yaml
 repoURL: https://github.com/94manuel/catalog-service-k8s.git
-targetRevision: main
+targetRevision: master
 path: helm/catalog-service
 helm:
   valueFiles:
