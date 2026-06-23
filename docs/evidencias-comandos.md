@@ -292,9 +292,7 @@ kubectl create namespace catalog-service --dry-run=client -o yaml | kubectl appl
 Desplegar microservicio:
 
 ```powershell
-helm upgrade --install catalog-service helm/catalog-service `
-  -n catalog-service `
-  -f helm/catalog-service/values-dev.yaml
+helm upgrade --install catalog-service helm/catalog-service -n catalog-service -f helm/catalog-service/values-dev.yaml
 ```
 
 Consultar recursos:

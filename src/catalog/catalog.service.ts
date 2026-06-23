@@ -5,7 +5,7 @@ import { CatalogItem, CreateCatalogItemDto } from './catalog.types';
 export class CatalogService {
   private readonly items: CatalogItem[] = [
     {
-      id: 'gelato-lulo',
+      id: 'gelato-lulo-cafe',
       name: 'Gelato de lulo',
       description: 'Producto de ejemplo usado para validar el microservicio.',
       price: 9500,
